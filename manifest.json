@@ -3,7 +3,7 @@
 	"description": "Opens pages based on the day of the week",
 	"manifest_version": 2,
 	"name": "Today's Pages",
-	"version": "0.1",
+	"version": "0.1.1",
 	"homepage_url": "https://github.com/ericfinn/TodaysPages",
 	
 	"incognito": "spanning",
