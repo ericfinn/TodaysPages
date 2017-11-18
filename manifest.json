@@ -1,0 +1,23 @@
+{
+	"description": "Opens today's pages",
+	"manifest_version": 2,
+	"name": "todays-pages",
+	"version": "0.1",
+	"homepage_url": "https://github.com/ericfinn/TodaysPages",
+	"icons": {
+		"48": "icons/today-48.png",
+		"32": "icons/today-32.png"
+	},
+
+	"permissions": [
+		"bookmarks",
+		"storage"
+	],
+	"background": {
+		"scripts": ["background.js"]
+	},
+
+	"browser_action": {
+		"default_icon": "icons/today-32.png"
+	}
+}
