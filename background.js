@@ -19,6 +19,10 @@ const FOLDER_TITLES = [
 var bmFolder;
 var daysToFolders = {};
 
+function getDayOfWeekText(dayIndex) {
+	  return ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][dayIndex];
+}
+
 function init() {
 	browser.bookmarks
 		.search({title:BOOKMARK_FOLDER_TITLE})
@@ -102,7 +106,80 @@ function openPages() {
 	})
 }
 
+function createAddPageItem(folderTitles, displayDay, parentId) {
+	browser.menus.create({
+		id: "add" + folderTitles.join(""),
+		contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
+		title: displayDay,
+		parentId: parentId,
+		onclick: makeAddPageCallback(folderTitles)
+	});
+}
+
+function makeAddPageCallback(folderTitles) {
+	return () => {
+		getActiveTab(tabs => {
+			if(tabs[0]) {
+				tab = tabs[0];
+				addBookmark(tab.url, tab.title, folderTitles);
+			}
+		});
+	}
+}
+
+function getActiveTab(callback) {
+	browser.tabs.query({active: true, currentWindow: true}).then(callback);
+}
+
+function addBookmark(url, title, folderTitles) {
+	if(url) {
+		folderTitles.forEach(folderTitle => {
+			console.log("Adding bookmark to " + url + " in folder " + folderTitle);
+			var parentId = daysToFolders[folderTitle].id;
+			browser.bookmarks.create({parentId: parentId, title: title, url: url})
+				.then(() => {}, error => console.error(`Failed to create bookmark: ${error}`));
+		})
+	}
+	else {
+		console.error("Can't add bookmark to empty url")
+	}
+}
+
+function createMenus() {
+	browser.menus.create({
+		id: "menuRoot",
+		contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
+		title: "Add Page to Today's Pages..."
+	});
+	
+	browser.menus.create({
+		id: "addEveryDay",
+		contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
+		title: "Daily",
+		parentId: "menuRoot",
+		onclick: makeAddPageCallback(FOLDER_TITLES)
+	});
+	createAddPageItem([FOLDER_TITLE_MONDAY, FOLDER_TITLE_WEDNESDAY, FOLDER_TITLE_FRIDAY],
+		"Mon / Wed / Fri",
+		"menuRoot");
+		
+	createAddPageItem([FOLDER_TITLE_TUESDAY, FOLDER_TITLE_THURSDAY],
+		"Tue / Thu",
+		"menuRoot");
+		
+	browser.menus.create({
+		contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
+		type: browser.menus.ItemType.SEPARATOR,
+		parentId: "menuRoot"
+	});
+	
+	for(var dayIdx = 0; dayIdx < FOLDER_TITLES.length; dayIdx++) {
+		createAddPageItem([FOLDER_TITLES[dayIdx]], getDayOfWeekText(dayIdx), "menuRoot");
+	}
+}
+
 init();
+createMenus();
 
 browser.browserAction.setTitle({title: "Open today's pages"});
 browser.browserAction.onClicked.addListener(openPages);

@@ -11,7 +11,9 @@
 
 	"permissions": [
 		"bookmarks",
-		"storage"
+		"menus",
+		"storage",
+		"tabs"
 	],
 	"background": {
 		"scripts": ["background.js"]
