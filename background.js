@@ -97,7 +97,7 @@ var MenusSetup = {
 		browser.menus.create({
 			id: "menuRoot",
 			contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
-			title: "Add Page to Today's Pages..."
+			title: "Add Page to Today's Pages"
 		});
 		
 		browser.menus.create({
@@ -137,13 +137,8 @@ var MenusSetup = {
 	},
 
 	makeAddPageCallback: function(folderTitles) {
-		return () => {
-			getActiveTab(tabs => {
-				if(tabs[0]) {
-					tab = tabs[0];
-					addBookmark(tab.url, tab.title, folderTitles);
-				}
-			});
+		return (info, tab) => {
+			addBookmark(tab.url, tab.title, folderTitles);
 		}
 	}
 };
