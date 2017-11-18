@@ -1,0 +1,21 @@
+{
+	"addonDesc": {
+		"message": "Öffnet Websites basierend auf dem Wochentag",
+		"description": "Addon description"
+	},
+	
+	"dailyMenuItem": {
+		"message": "Täglich",
+		"description": "The label for the menu item that adds a site to every day"
+	},
+	
+	"addPageLabel": {
+		"message": "Fügen Sie diese Website zu Today's Pages",
+		"description": "Label for top-level menu item where users go to add pages"
+	},
+	
+	"openPagesTooltip": {
+		"message": "Öffnen Sie die heutigen Websites",
+		"description": "Browser action tooltip describing action of opening all pages configured for today"
+	}
+}
