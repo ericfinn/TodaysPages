@@ -2,6 +2,8 @@
 
 Opens the websites you want to see today.
 
+[Install Today's Pages](https://addons.mozilla.org/en-US/firefox/addon/todays-pages/)
+
 ## How to use
 
 ### To add sites:
