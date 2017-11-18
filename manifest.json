@@ -8,8 +8,9 @@
 	
 	"incognito": "spanning",
 	"icons": {
-		"48": "icons/today-48.png",
-		"32": "icons/today-32.png"
+		"16": "icons/today-16.png",
+		"32": "icons/today-32.png",
+		"48": "icons/today-48.png"
 	},
 	"permissions": [
 		"bookmarks",
@@ -22,6 +23,7 @@
 
 	"browser_action": {
 		"default_icon": {
+			"16": "icons/today-16.png",
 			"32": "icons/today-32.png",
 			"48": "icons/today-48.png"
 		}
