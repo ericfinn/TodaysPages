@@ -20,7 +20,19 @@ var bmFolder;
 var daysToFolders = {};
 
 function getDayOfWeekText(dayIndex) {
-	  return ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][dayIndex];
+	var curDate = new Date();
+	var todayIdx = curDate.getDay();
+	var offset = dayIndex - todayIdx;
+	curDate.setDate(curDate.getDate() + offset);
+	return curDate.toLocaleString(window.navigator.language, {weekday: 'long'});
+}
+
+function getShortDayOfWeekText(dayIndex) {
+	var curDate = new Date();
+	var todayIdx = curDate.getDay();
+	var offset = dayIndex - todayIdx;
+	curDate.setDate(curDate.getDate() + offset);
+	return curDate.toLocaleString(window.navigator.language, {weekday: 'short'});
 }
 
 var BookmarksSetup = {
@@ -97,22 +109,22 @@ var MenusSetup = {
 		browser.menus.create({
 			id: "menuRoot",
 			contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
-			title: "Add Page to Today's Pages"
+			title: browser.i18n.getMessage("addPageLabel")
 		});
 		
 		browser.menus.create({
 			id: "addEveryDay",
 			contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
-			title: "Daily",
+			title: browser.i18n.getMessage("dailyMenuItem"),
 			parentId: "menuRoot",
 			onclick: MenusSetup.makeAddPageCallback(FOLDER_TITLES)
 		});
 		MenusSetup.createAddPageItem([FOLDER_TITLE_MONDAY, FOLDER_TITLE_WEDNESDAY, FOLDER_TITLE_FRIDAY],
-			"Mon / Wed / Fri",
+			getShortDayOfWeekText(1) + " / " + getShortDayOfWeekText(3) + " / " + getShortDayOfWeekText(5),
 			"menuRoot");
 			
 		MenusSetup.createAddPageItem([FOLDER_TITLE_TUESDAY, FOLDER_TITLE_THURSDAY],
-			"Tue / Thu",
+			getShortDayOfWeekText(2) + " / " + getShortDayOfWeekText(4),
 			"menuRoot");
 			
 		browser.menus.create({
@@ -182,6 +194,6 @@ function addBookmark(url, title, folderTitles) {
 BookmarksSetup.init();
 MenusSetup.createMenus();
 
-browser.browserAction.setTitle({title: "Open today's pages"});
+browser.browserAction.setTitle({title: browser.i18n.getMessage("openPagesTooltip")});
 browser.browserAction.onClicked.addListener(openPages);
  

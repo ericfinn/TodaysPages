@@ -1,0 +1,21 @@
+{
+	"addonDesc": {
+		"message": "Opens pages based on the day of the week",
+		"description": "Addon description"
+	},
+	
+	"dailyMenuItem": {
+		"message": "Daily",
+		"description": "The label for the menu item that adds a site to every day"
+	},
+	
+	"addPageLabel": {
+		"message": "Add Page to Today's Pages",
+		"description": "Label for top-level menu item where users go to add pages"
+	},
+	
+	"openPagesTooltip": {
+		"message": "Open today's pages",
+		"description": "Browser action tooltip describing action of opening all pages configured for today"
+	}
+}
