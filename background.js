@@ -24,7 +24,7 @@ function getDayOfWeekText(dayIndex) {
 	var todayIdx = curDate.getDay();
 	var offset = dayIndex - todayIdx;
 	curDate.setDate(curDate.getDate() + offset);
-	return curDate.toLocaleString(window.navigator.language, {weekday: 'long'});
+	return curDate.toLocaleString(browser.i18n.getUILanguage(), {weekday: 'long'});
 }
 
 function getShortDayOfWeekText(dayIndex) {
@@ -32,7 +32,7 @@ function getShortDayOfWeekText(dayIndex) {
 	var todayIdx = curDate.getDay();
 	var offset = dayIndex - todayIdx;
 	curDate.setDate(curDate.getDate() + offset);
-	return curDate.toLocaleString(window.navigator.language, {weekday: 'short'});
+	return curDate.toLocaleString(browser.i18n.getUILanguage(), {weekday: 'short'});
 }
 
 var BookmarksSetup = {
