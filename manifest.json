@@ -1,14 +1,16 @@
 {
-	"description": "Opens today's pages",
+	"author": "Eric Finn",
+	"description": "Opens pages based on the day of the week",
 	"manifest_version": 2,
-	"name": "todays-pages",
+	"name": "Today's Pages",
 	"version": "0.1",
 	"homepage_url": "https://github.com/ericfinn/TodaysPages",
+	
+	"incognito": "spanning",
 	"icons": {
 		"48": "icons/today-48.png",
 		"32": "icons/today-32.png"
 	},
-
 	"permissions": [
 		"bookmarks",
 		"menus",
@@ -19,6 +21,9 @@
 	},
 
 	"browser_action": {
-		"default_icon": "icons/today-32.png"
+		"default_icon": {
+			"32": "icons/today-32.png",
+			"48": "icons/today-48.png"
+		}
 	}
 }
