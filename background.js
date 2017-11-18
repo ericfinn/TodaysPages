@@ -23,72 +23,131 @@ function getDayOfWeekText(dayIndex) {
 	  return ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][dayIndex];
 }
 
-function init() {
-	browser.bookmarks
-		.search({title:BOOKMARK_FOLDER_TITLE})
-		.then(handleSearchResults, error => console.error(`Error initializing Today's Pages: ${error}`));
-}
-
-function handleSearchResults(searchResults) {
-	if(searchResults.length === 0) {
-		console.log("Making directory");
-		makeBookmarkDir();
-	}
-	else if(searchResults.length === 1) {
-		console.log("Found directory");
-		bmFolder = searchResults[0];
-		fetchSubdirs();
-	}
-	else {
-		console.log("Too many results?!");
-		//TODO
-	}
-}
-
-function makeBookmarkDir() {
-	browser.bookmarks
-		.create({
-			title: BOOKMARK_FOLDER_TITLE
-		})
-		.then(createdFolder => {
-				bmFolder = createdFolder;
-				fetchSubdirs();
-			},
-			error => console.error(`Error creating bookmark folder: ${error}`)
-		);
-}
-
-function fetchSubdirs() {
-	browser.bookmarks.getChildren(bmFolder.id).then(subdirs => {
-		if(subdirs === undefined) {
-			console.log("No subdirs");
-			subdirs = [];
+var BookmarksSetup = {
+	init: function() {
+		browser.bookmarks
+			.search({title:BOOKMARK_FOLDER_TITLE})
+			.then(BookmarksSetup.handleSearchResults, error => console.error(`Error initializing Today's Pages: ${error}`));
+	},
+	
+	handleSearchResults: function(searchResults) {
+		if(searchResults.length === 0) {
+			console.log("Making directory");
+			BookmarksSetup.makeBookmarkDir();
 		}
-		for(let subdir of subdirs) {
-			console.log("Found subdir " + subdir.title);
-			if(FOLDER_TITLES.includes(subdir.title)) {
-				daysToFolders[subdir.title] = subdir;
+		else if(searchResults.length === 1) {
+			console.log("Found directory");
+			bmFolder = searchResults[0];
+			BookmarksSetup.fetchSubdirs();
+		}
+		else {
+			console.log("Too many results?!");
+			//TODO
+		}
+	},
+	
+	makeBookmarkDir: function() {
+		browser.bookmarks
+			.create({
+				title: BOOKMARK_FOLDER_TITLE
+			})
+			.then(createdFolder => {
+					bmFolder = createdFolder;
+					BookmarksSetup.fetchSubdirs();
+				},
+				error => console.error(`Error creating bookmark folder: ${error}`)
+			);
+	},
+	
+	fetchSubdirs: function() {
+		browser.bookmarks.getChildren(bmFolder.id).then(subdirs => {
+			if(subdirs === undefined) {
+				console.log("No subdirs");
+				subdirs = [];
 			}
-		}
+			for(let subdir of subdirs) {
+				console.log("Found subdir " + subdir.title);
+				if(FOLDER_TITLES.includes(subdir.title)) {
+					daysToFolders[subdir.title] = subdir;
+				}
+			}
+			
+			//create any folders that aren't present
+			//Go in reverse order to make the folders appear in the correct order
+			for(var i = FOLDER_TITLES.length - 1; i >= 0; i--) {
+				var title = FOLDER_TITLES[i];
+				if(!(daysToFolders.hasOwnProperty(title))) {
+					console.log("Creating folder " + title);
+					createPromise = browser.bookmarks.create({
+						parentId: bmFolder.id,
+						title: title
+					});
+					createPromise.then(
+						node => daysToFolders[title] = node,
+						error => console.error(`Error creating bookmark folder: ${error}`)
+					);
+				}
+			}
+		});
+	}
+};
+
+var MenusSetup = {
+	createMenus: function() {
+		browser.menus.create({
+			id: "menuRoot",
+			contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
+			title: "Add Page to Today's Pages..."
+		});
 		
-		//create any folders that aren't present
-		//Go in reverse order to make the folders appear in the correct order
-		for(var i = FOLDER_TITLES.length - 1; i >= 0; i--) {
-			var title = FOLDER_TITLES[i];
-			if(!(daysToFolders.hasOwnProperty(title))) {
-				console.log("Creating folder " + title);
-				createPromise = browser.bookmarks.create({
-					parentId: bmFolder.id,
-					title: title
-				});
-				createPromise.then(
-					node => daysToFolders[title] = node,
-					error => console.error(`Error creating bookmark folder: ${error}`)
-				);
-			}
+		browser.menus.create({
+			id: "addEveryDay",
+			contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
+			title: "Daily",
+			parentId: "menuRoot",
+			onclick: MenusSetup.makeAddPageCallback(FOLDER_TITLES)
+		});
+		MenusSetup.createAddPageItem([FOLDER_TITLE_MONDAY, FOLDER_TITLE_WEDNESDAY, FOLDER_TITLE_FRIDAY],
+			"Mon / Wed / Fri",
+			"menuRoot");
+			
+		MenusSetup.createAddPageItem([FOLDER_TITLE_TUESDAY, FOLDER_TITLE_THURSDAY],
+			"Tue / Thu",
+			"menuRoot");
+			
+		browser.menus.create({
+			contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
+			type: browser.menus.ItemType.SEPARATOR,
+			parentId: "menuRoot"
+		});
+		
+		for(var dayIdx = 0; dayIdx < FOLDER_TITLES.length; dayIdx++) {
+			MenusSetup.createAddPageItem([FOLDER_TITLES[dayIdx]], getDayOfWeekText(dayIdx), "menuRoot");
 		}
-	});
-}
+	},
+
+	createAddPageItem: function(folderTitles, displayDay, parentId) {
+		browser.menus.create({
+			id: "add" + folderTitles.join(""),
+			contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
+			title: displayDay,
+			parentId: parentId,
+			onclick: MenusSetup.makeAddPageCallback(folderTitles)
+		});
+	},
+
+	makeAddPageCallback: function(folderTitles) {
+		return () => {
+			getActiveTab(tabs => {
+				if(tabs[0]) {
+					tab = tabs[0];
+					addBookmark(tab.url, tab.title, folderTitles);
+				}
+			});
+		}
+	}
+};
+
 
 function openPages() {
 	var dayOfWeek = new Date().getDay();
@@ -105,27 +164,6 @@ function openPages() {
 			}
 		}
 	})
-}
-
-function createAddPageItem(folderTitles, displayDay, parentId) {
-	browser.menus.create({
-		id: "add" + folderTitles.join(""),
-		contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
-		title: displayDay,
-		parentId: parentId,
-		onclick: makeAddPageCallback(folderTitles)
-	});
-}
-
-function makeAddPageCallback(folderTitles) {
-	return () => {
-		getActiveTab(tabs => {
-			if(tabs[0]) {
-				tab = tabs[0];
-				addBookmark(tab.url, tab.title, folderTitles);
-			}
-		});
-	}
 }
 
 function getActiveTab(callback) {
@@ -146,41 +184,8 @@ function addBookmark(url, title, folderTitles) {
 	}
 }
 
-function createMenus() {
-	browser.menus.create({
-		id: "menuRoot",
-		contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
-		title: "Add Page to Today's Pages..."
-	});
-	
-	browser.menus.create({
-		id: "addEveryDay",
-		contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
-		title: "Daily",
-		parentId: "menuRoot",
-		onclick: makeAddPageCallback(FOLDER_TITLES)
-	});
-	createAddPageItem([FOLDER_TITLE_MONDAY, FOLDER_TITLE_WEDNESDAY, FOLDER_TITLE_FRIDAY],
-		"Mon / Wed / Fri",
-		"menuRoot");
-		
-	createAddPageItem([FOLDER_TITLE_TUESDAY, FOLDER_TITLE_THURSDAY],
-		"Tue / Thu",
-		"menuRoot");
-		
-	browser.menus.create({
-		contexts: [browser.menus.ContextType.ALL, browser.menus.ContextType.TAB],
-		type: browser.menus.ItemType.SEPARATOR,
-		parentId: "menuRoot"
-	});
-	
-	for(var dayIdx = 0; dayIdx < FOLDER_TITLES.length; dayIdx++) {
-		createAddPageItem([FOLDER_TITLES[dayIdx]], getDayOfWeekText(dayIdx), "menuRoot");
-	}
-}
-
-init();
-createMenus();
+BookmarksSetup.init();
+MenusSetup.createMenus();
 
 browser.browserAction.setTitle({title: "Open today's pages"});
 browser.browserAction.onClicked.addListener(openPages);
