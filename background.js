@@ -72,7 +72,8 @@ function fetchSubdirs() {
 		}
 		
 		//create any folders that aren't present
-		for(var i = 0; i < FOLDER_TITLES.length; i++) {
+		//Go in reverse order to make the folders appear in the correct order
+		for(var i = FOLDER_TITLES.length - 1; i >= 0; i--) {
 			var title = FOLDER_TITLES[i];
 			if(!(daysToFolders.hasOwnProperty(title))) {
 				console.log("Creating folder " + title);
