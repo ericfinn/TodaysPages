@@ -68,7 +68,7 @@ var BookmarksSetup = {
 			for(let subdir of subdirs) {
 				console.log("Found subdir " + subdir.title);
 				if(FOLDER_TITLES.includes(subdir.title)) {
-					daysToFolders[subdir.title] = subdir;
+					daysToFolders[subdir.title] = subdir.id;
 				}
 			}
 			
@@ -83,7 +83,7 @@ var BookmarksSetup = {
 						title: title
 					});
 					createPromise.then(
-						node => daysToFolders[title] = node,
+						node => daysToFolders[title] = node.id,
 						error => console.error(`Error creating bookmark folder: ${error}`)
 					);
 				}
@@ -152,9 +152,9 @@ var MenusSetup = {
 function openPages() {
 	var dayOfWeek = new Date().getDay();
 	var folderTitle = FOLDER_TITLES[dayOfWeek];
-	var folder = daysToFolders[folderTitle];
+	var folderId = daysToFolders[folderTitle];
 	
-	var bookmarks = browser.bookmarks.getChildren(folder.id).then(todaysPages => {
+	var bookmarks = browser.bookmarks.getChildren(folderId).then(todaysPages => {
 		for(var i = 0; i < todaysPages.length; i++) {
 			var bookmark = todaysPages[i];
 			if("url" in bookmark) {
@@ -174,7 +174,7 @@ function addBookmark(url, title, folderTitles) {
 	if(url) {
 		folderTitles.forEach(folderTitle => {
 			console.log("Adding bookmark to " + url + " in folder " + folderTitle);
-			var parentId = daysToFolders[folderTitle].id;
+			var parentId = daysToFolders[folderTitle];
 			browser.bookmarks.create({parentId: parentId, title: title, url: url})
 				.then(() => {}, error => console.error(`Failed to create bookmark: ${error}`));
 		})
