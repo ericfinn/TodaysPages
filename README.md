@@ -2,7 +2,7 @@
 
 Opens the websites you want to see today.
 
-[Install Today's Pages](https://addons.mozilla.org/en-US/firefox/addon/todays-pages/)
+[Install Today's Pages in Firefox](https://addons.mozilla.org/en-US/firefox/addon/todays-pages/)
 
 ![Screenshot showing the context menu, adding xkcd.com to Monday, Wednesday, and Friday](screenshots/xkcd-mwf.png)
 
