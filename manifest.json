@@ -3,7 +3,7 @@
 	"description": "__MSG_addonDesc__",
 	"manifest_version": 2,
 	"name": "Today's Pages",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"homepage_url": "https://github.com/ericfinn/TodaysPages",
 	
 	"default_locale": "en",
