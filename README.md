@@ -21,3 +21,9 @@ Today's Pages adds pages to your bookmarks.
 1. To open up the bookmarks manager in Firefox, press Ctrl-Shift-B or click on "Show All Bookmarks" in the bookmarks menu.
 1. Navigate to All Bookmarks > Other Bookmarks > Today's Pages
 1. Underneath Today's Pages, there are 7 folders, one for each day of the week. You can modify the bookmarks here to control which sites open on a particular day, and the order in which they open.
+
+## Support
+
+If you are encountering a problem or want to request a feature, feel free to create an issue on this repo.
+
+If you want to translate Today's Pages into your language, the messages to translate are located [here](_locales/en/messages.json). Only the text after each occurrence of `"message"` needs to be translated.
