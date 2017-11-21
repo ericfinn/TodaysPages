@@ -90,12 +90,11 @@ var BookmarksSetup = {
 				var title = FOLDER_TITLES[i];
 				if(!(daysToFolders.hasOwnProperty(title))) {
 					console.log("Creating folder " + title);
-					createPromise = browser.bookmarks.create({
+					browser.bookmarks.create({
 						parentId: bmFolder.id,
 						title: title
-					});
-					createPromise.then(
-						node => daysToFolders[title] = node.id,
+					}).then(
+						node => daysToFolders[node.title] = node.id,
 						error => console.error(`Error creating bookmark folder: ${error}`)
 					);
 				}
