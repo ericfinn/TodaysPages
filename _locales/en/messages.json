@@ -17,5 +17,30 @@
 	"openPagesTooltip": {
 		"message": "Open today's pages",
 		"description": "Browser action tooltip describing action of opening all pages configured for today"
+	},
+	
+	"optionsHeader": {
+		"message": "Options",
+		"description": "Header on options page"
+	},
+	
+	"optionsLoadRandomLabel": {
+		"message": "Open pages in random order",
+		"description": "Label for the checkbox that enables opening pages in random order"
+	},
+	
+	"optionsCloseOpenTabsLabel": {
+		"message": "Close open tabs when opening pages",
+		"description": "Label for the checkbox that enables closing current tabs"
+	},
+	
+	"optionsAllowDupeSitesLabel": {
+		"message": "Allow duplicate sites in a day",
+		"description": "Label for checkbox that enables duplicate sites stored under a single day"
+	},
+	
+	"optionsSaveButton": {
+		"message": "Save",
+		"description": "Label on the button that saves settings"
 	}
 }
