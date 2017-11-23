@@ -179,6 +179,7 @@ function openBookmarks(todaysPages) {
 		var bookmark = todaysPages[i];
 		if("url" in bookmark) {
 			browser.tabs.create({
+				active: false,
 				url: bookmark.url
 			});
 		}
