@@ -1,1 +1,1 @@
-7z a -r TodaysPages.zip .\_locales icons .\background.js .\LICENSE .\manifest.json .\README.md
+7z a -r TodaysPages.zip _locales icons options src .\LICENSE .\manifest.json .\README.md
