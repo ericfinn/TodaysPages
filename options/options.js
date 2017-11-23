@@ -7,10 +7,10 @@ var Messages = {
 };
 
 function populateText() {
-	document.querySelector("#optionsHeader").innerHTML = Messages.header;
-	document.querySelector("#loadRandomLabel").innerHTML = Messages.loadRandomLabel;
-	document.querySelector("#closeOpenTabsLabel").innerHTML = Messages.closeOpenTabsLabel;
-	document.querySelector("#saveButton").innerHTML = Messages.saveButton;
+	document.querySelector("#optionsHeader").textContent = Messages.header;
+	document.querySelector("#loadRandomLabel").textContent = Messages.loadRandomLabel;
+	document.querySelector("#closeOpenTabsLabel").textContent = Messages.closeOpenTabsLabel;
+	document.querySelector("#saveButton").textContent = Messages.saveButton;
 }
 
 function saveOptions(e) {
