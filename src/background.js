@@ -192,13 +192,18 @@ function openPages() {
 	var folderId = daysToFolders[folderTitle];
 	
 	var gettingRandomOrderOption = OptionsManager.getOption(OptionNames.randomOrder);
+	var gettingCloseOpen = OptionsManager.getOption(OptionNames.closeOpenTabs);
 	var gettingBookmarks = browser.bookmarks.getChildren(folderId);
 	
-	Promise.all([gettingRandomOrderOption, gettingBookmarks]).then(values => {
+	Promise.all([gettingRandomOrderOption, gettingCloseOpen, gettingBookmarks]).then(values => {
 		var randomOrderOption = values[0];
-		var todaysPages = values[1];
+		var closeOpen = values[1];
+		var todaysPages = values[2];
 		if(randomOrderOption) {
 			todaysPages = kfyShuffle(todaysPages);
+		}
+		if(closeOpen) {
+			browser.tabs.query({currentWindow: true}).then(tabs => browser.tabs.remove(tabs.map(tab => tab.id)));
 		}
 		openBookmarks(todaysPages);
 	})
