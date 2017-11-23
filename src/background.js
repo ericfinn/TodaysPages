@@ -199,6 +199,7 @@ function openPages() {
 		var randomOrderOption = values[0];
 		var closeOpen = values[1];
 		var todaysPages = values[2];
+		closeCurrentTabIfBlank();
 		if(randomOrderOption) {
 			todaysPages = kfyShuffle(todaysPages);
 		}
@@ -207,6 +208,19 @@ function openPages() {
 		}
 		openBookmarks(todaysPages);
 	})
+}
+
+function closeCurrentTabIfBlank() {
+	browser.tabs.query({
+		currentWindow: true,
+		active: true
+	}).then(tabs => {
+		var tab = tabs[0];
+		console.log(tab);
+		if(["about:blank", "about:newtab", "about:home"].includes(tab.url)) {
+			browser.tabs.remove(tab.id).then(console.log("Removed"), err => console.log(`Failed to remove tab: ${err}`));
+		}
+	});
 }
 
 function addBookmark(url, title, folderTitles) {
