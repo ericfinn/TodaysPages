@@ -17,5 +17,25 @@
 	"openPagesTooltip": {
 		"message": "Öffnen Sie die heutigen Websites",
 		"description": "Browser action tooltip describing action of opening all pages configured for today"
+	},
+	
+	"optionsHeader": {
+		"message": "Optionen",
+		"description": "Header on options page"
+	},
+	
+	"optionsLoadRandomLabel": {
+		"message": "Seiten in zufälliger Reihenfolge öffnen",
+		"description": "Label for the checkbox that enables opening pages in random order"
+	},
+	
+	"optionsCloseOpenTabsLabel": {
+		"message": "Offene Tabs beim Öffnen von Seiten schließen",
+		"description": "Label for the checkbox that enables closing current tabs"
+	},
+	
+	"optionsSaveButton": {
+		"message": "Speichern",
+		"description": "Label on the button that saves settings"
 	}
 }

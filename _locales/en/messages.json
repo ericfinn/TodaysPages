@@ -34,11 +34,6 @@
 		"description": "Label for the checkbox that enables closing current tabs"
 	},
 	
-	"optionsAllowDupeSitesLabel": {
-		"message": "Allow duplicate sites in a day",
-		"description": "Label for checkbox that enables duplicate sites stored under a single day"
-	},
-	
 	"optionsSaveButton": {
 		"message": "Save",
 		"description": "Label on the button that saves settings"
