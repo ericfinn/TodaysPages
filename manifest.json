@@ -34,5 +34,11 @@
 	"options_ui": {
 		"page": "options/options.html",
 		"browser_style": true
+	},
+	
+	"applications": {
+		"gecko": {
+			"id": "{ec182fd1-0731-4a18-98ad-53aaeeda3401}"
+		}
 	}
 }
