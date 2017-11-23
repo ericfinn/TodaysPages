@@ -174,11 +174,6 @@ function kfyShuffle(arr) {
 	return shuffling;
 }
 
-function getOption(optName) {
-	var gettingItem = browser.storage.sync.get(optName);
-	return gettingItem.then((res) => res[optName]);
-}
-
 function openBookmarks(todaysPages) {
 	for(var i = 0; i < todaysPages.length; i++) {
 		var bookmark = todaysPages[i];
@@ -195,7 +190,7 @@ function openPages() {
 	var folderTitle = FOLDER_TITLES[dayOfWeek];
 	var folderId = daysToFolders[folderTitle];
 	
-	var gettingRandomOrderOption = getOption("randomOrder");
+	var gettingRandomOrderOption = OptionsManager.getOption(OptionNames.randomOrder);
 	var gettingBookmarks = browser.bookmarks.getChildren(folderId);
 	
 	Promise.all([gettingRandomOrderOption, gettingBookmarks]).then(values => {
@@ -227,4 +222,3 @@ MenusSetup.createMenus();
 
 browser.browserAction.setTitle({title: browser.i18n.getMessage("openPagesTooltip")});
 browser.browserAction.onClicked.addListener(openPages);
- 

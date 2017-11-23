@@ -20,7 +20,7 @@
 		"tabs"
 	],
 	"background": {
-		"scripts": ["background.js"]
+		"scripts": ["src/options-manager.js", "src/background.js"]
 	},
 
 	"browser_action": {
