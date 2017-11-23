@@ -223,13 +223,24 @@ function closeCurrentTabIfBlank() {
 	});
 }
 
+function addBookmarkToFolder(folderId, url, title) {
+	browser.bookmarks.getChildren(folderId).then(children => {
+		if(children.map(child => child.url).includes(url)) {
+			console.log(url + " already exists in folder " + folderId);
+		}
+		else {
+			browser.bookmarks.create({parentId: folderId, title: title, url: url})
+				.then(() => {}, error => console.error(`Failed to create bookmark: ${error}`));
+		}
+	})
+}
+
 function addBookmark(url, title, folderTitles) {
 	if(url) {
 		folderTitles.forEach(folderTitle => {
 			console.log("Adding bookmark to " + url + " in folder " + folderTitle);
 			var parentId = daysToFolders[folderTitle];
-			browser.bookmarks.create({parentId: parentId, title: title, url: url})
-				.then(() => {}, error => console.error(`Failed to create bookmark: ${error}`));
+			addBookmarkToFolder(parentId, url, title);
 		})
 	}
 	else {
