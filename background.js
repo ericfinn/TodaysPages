@@ -154,26 +154,58 @@ var MenusSetup = {
 	}
 };
 
+//https://stackoverflow.com/a/1527820/407071
+function randomInt(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/*
+Knuth/Fisher-Yates shuffle
+https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+*/
+function kfyShuffle(arr) {
+	shuffling = arr.slice(0);
+	for(var i = shuffling.length-1; i >= 1; i--) {
+		var swapIdx = randomInt(0, i);
+		var temp = shuffling[i];
+		shuffling[i] = shuffling[swapIdx];
+		shuffling[swapIdx] = temp;
+	}
+	return shuffling;
+}
+
+function getOption(optName) {
+	var gettingItem = browser.storage.sync.get(optName);
+	return gettingItem.then((res) => res[optName]);
+}
+
+function openBookmarks(todaysPages) {
+	for(var i = 0; i < todaysPages.length; i++) {
+		var bookmark = todaysPages[i];
+		if("url" in bookmark) {
+			browser.tabs.create({
+				url: bookmark.url
+			});
+		}
+	}
+}
 
 function openPages() {
 	var dayOfWeek = new Date().getDay();
 	var folderTitle = FOLDER_TITLES[dayOfWeek];
 	var folderId = daysToFolders[folderTitle];
 	
-	var bookmarks = browser.bookmarks.getChildren(folderId).then(todaysPages => {
-		for(var i = 0; i < todaysPages.length; i++) {
-			var bookmark = todaysPages[i];
-			if("url" in bookmark) {
-				browser.tabs.create({
-					url: bookmark.url
-				});
-			}
+	var gettingRandomOrderOption = getOption("randomOrder");
+	var gettingBookmarks = browser.bookmarks.getChildren(folderId);
+	
+	Promise.all([gettingRandomOrderOption, gettingBookmarks]).then(values => {
+		var randomOrderOption = values[0];
+		var todaysPages = values[1];
+		if(randomOrderOption) {
+			todaysPages = kfyShuffle(todaysPages);
 		}
+		openBookmarks(todaysPages);
 	})
-}
-
-function getActiveTab(callback) {
-	browser.tabs.query({active: true, currentWindow: true}).then(callback);
 }
 
 function addBookmark(url, title, folderTitles) {
